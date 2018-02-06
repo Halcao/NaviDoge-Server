@@ -15,7 +15,9 @@ var kNN = require('../model//kNN').kNN;
 
 function locateRequest(req, res) {
     const locationData = req.body.locationData;
-    for (var data of locationData) {
+    let data = locationData.find(e => e.dType == 'rssi');
+    // for (var data of locationData) {
+        // if (data.dType === 'mag') { continue; }
         // TODO: 确定地点
         PFS.findOne({pType: data.dType}, function(err, result) {
             if (err) {
@@ -27,12 +29,12 @@ function locateRequest(req, res) {
             for (var i = 0; i < rssis.length; i++) {
                 dataSet.push(new DataPoint(rssis[i], coordinates[i]));
             }
-            var point = new DataPoint(data.dData, []);
+            var point = new DataPoint(data.dData.map(e => e === 0 ? -100 : e), []);
             const coordinate = kNN(point, dataSet, 3);
 
             res.send(JSON.stringify(coordinate));
         })
-    }
+    // }
 }
 
 module.exports = locateRequest;
