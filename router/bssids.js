@@ -1,4 +1,4 @@
-var PFS = require('../schema/pfs.js');
+var PFS = require('../model/schema/pfs.js');
 
 const bssids = function(req, res) {
     PFS.find({pType: 'rssi'}, function(err, result) {

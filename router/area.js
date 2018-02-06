@@ -1,4 +1,4 @@
-var Area = require('../schema/area.js');
+var Area = require('../model/schema/area.js');
 
 var area = function(req, res) {
     Area.find(function(err, result) {
