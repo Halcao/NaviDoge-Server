@@ -2,6 +2,7 @@ var mongoose = require('../db.js');
 
 const Schema = mongoose.Schema;
 
+// Fingerprint Database
 const pfsSchema = new Schema({
     pId: Number,
     asId: Number,

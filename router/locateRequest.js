@@ -2,11 +2,13 @@
 // private long rTimestamp;
 // private LocationData[] locationData;
 // private int rDataNum;
-// private int rDataTop;}
+// private int rDataTop;
+// }
 
 // LocationData {
 //     private String dType;
-//     private double[] dData;}
+//     private double[] dData;
+// }
 
 var PFS = require('../model/schema/pfs');
 var DataPoint = require('../model//kNN').DataPoint;
