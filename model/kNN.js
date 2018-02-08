@@ -1,19 +1,3 @@
-class DataPoint {
-    constructor(values, category) {
-        this.values = values;
-        this.category = category;
-    }
-
-    distance(other) {
-        var distance = 0;
-        for (var i = 0; i < this.values.length; i++) {
-            let tmp = this.values[i] - other.values[i];
-            distance += tmp * tmp;
-        }
-        return Math.sqrt(distance);
-    }
-}
-
 /**
  * 
  * @param {DataPoint} data 
@@ -36,7 +20,23 @@ var set = points.map(e => new DataPoint(e.values, e.type));
 
 console.log(kNN(dataPoint, set, 3));
  */
-function kNN(data, dataSet, k) {
+class DataPoint {
+    constructor(values, category) {
+        this.values = values;
+        this.category = category;
+    }
+
+    distance(other) {
+        var distance = 0;
+        for (var i = 0; i < this.values.length; i++) {
+            let tmp = this.values[i] - other.values[i];
+            distance += tmp * tmp;
+        }
+        return Math.sqrt(distance);
+    }
+}
+
+ function kNN(data, dataSet, k) {
     
     var results = [];
     for (var point of dataSet) {
