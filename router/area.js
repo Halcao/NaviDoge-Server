@@ -6,7 +6,7 @@ var area = function(req, res) {
             // FIXME: handle err
             res.send(JSON.stringify(err));
         }
-        res.send(JSON.stringify(result);
+        res.send(JSON.stringify(result));
         console.log(res);
     });
 }
