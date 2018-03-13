@@ -15,13 +15,15 @@ app.use(session({
 app.use(bodyParser.json());
 
 app.get('/area', require('./router/area.js'));
-app.get('/bssids', require('./router/bssids.js'));
 app.get('/time', function(req, res) {
-    res.send(Date().toLocaleString());
-    res.end()
+  res.send(Date().toLocaleString());
+  res.end()
 });
 
+app.post('/initial', require('./router/initial.js'));
+app.post('/bssids', require('./router/bssids.js'));
 app.post('/locateRequest', require('./router/locateRequest.js'));
 app.post('/locate', require('./router/locateRequest.js'));
+app.post('/floorplan', require('./router/floorplan.js'));
 
 app.listen(8080);

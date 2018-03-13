@@ -7,14 +7,15 @@ var mongoose = require('../db.js');
 const Schema = mongoose.Schema;
 
 const areaSchema = new Schema({
-    aId: Number,
-    aName: String,
-    aAddress: String,
-    aGeographicLocation: [Number],
-    aLocateEngineConf: {
-        Method: String,
-        K: Number
-    }
+    no: Number,
+    name: String,
+    floor: Number,
+    altitude: Number,
+    relativeCoordinate: [Number],
+    size: [Number],
+    floorplanFilename: String,
+    PFSList: [Number],
+    StationList: Number
 });
 
 const Area = mongoose.model('Area', areaSchema, 'Areas');
