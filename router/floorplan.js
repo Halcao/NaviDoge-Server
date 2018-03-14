@@ -2,8 +2,9 @@ var fs = require("fs");
 
 
 const floorplan = function(req, res) {
-    var filename = req.body.filename;
-    var basePath = "";
+    //var filename = req.body.filename;
+    var filename = "55_5.svg";
+    var basePath = "/home/noil/NaviDoge-Server-master/resources/";
     // 异步读取
     fs.readFile(basePath + filename, function (err, data) {
         if (err) {
@@ -14,6 +15,5 @@ const floorplan = function(req, res) {
         res.send(data.toString())
     });
  }
-
 
 module.exports = floorplan;
