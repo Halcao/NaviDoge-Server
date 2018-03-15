@@ -22,8 +22,8 @@ app.get('/time', function(req, res) {
 
 app.post('/initial', require('./router/initial.js'));
 app.get('/bssids', require('./router/bssids.js'));
-app.post('/locate', require('./router/locate.js'));
-//app.post('/locate', require('./router/locateRequest.js'));
+//app.post('/locate', require('./router/locate.js'));
+app.post('/locate', require('./router/locateRequest.js'));
 app.post('/floorplan', require('./router/floorplan.js'));
 
 app.listen(8080);
