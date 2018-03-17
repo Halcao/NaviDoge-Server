@@ -26,10 +26,19 @@ class DataPoint {
         this.category = category;
     }
 
-    distance(other) {
+    feature_distance(other) {
         var distance = 0;
         for (var i = 0; i < this.values.length; i++) {
             let tmp = this.values[i] - other.values[i];
+            distance += tmp * tmp;
+        }
+        return Math.sqrt(distance);
+    }
+
+    physical_distance(){
+        var distance = 0;
+        for (var i = 0; i < this.category.length; i++) {
+            let tmp = this.category[i] - other.category[i];
             distance += tmp * tmp;
         }
         return Math.sqrt(distance);
@@ -40,7 +49,7 @@ class DataPoint {
     
     var results = [];
     for (var point of dataSet) {
-        var distance = data.distance(point);
+        var distance = data.feature_distance(point);
         results.push({
             point: point,
             distance: distance
