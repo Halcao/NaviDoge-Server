@@ -21,7 +21,8 @@ var set = points.map(e => new DataPoint(e.values, e.type));
 console.log(kNN(dataPoint, set, 3));
  */
 class DataPoint {
-    constructor(values, category) {
+    constructor(id, values, category) {
+        this.id = id;
         this.values = values;
         this.category = category;
     }
@@ -35,7 +36,7 @@ class DataPoint {
         return Math.sqrt(distance);
     }
 
-    physical_distance(){
+    physical_distance(other) {
         var distance = 0;
         for (var i = 0; i < this.category.length; i++) {
             let tmp = this.category[i] - other.category[i];
@@ -45,43 +46,34 @@ class DataPoint {
     }
 }
 
- function kNN(data, dataSet, k) {
-    
+function kNN(data, dataSet, k) {
+
     var results = [];
-    for (var point of dataSet) {
-        var distance = data.feature_distance(point);
-        results.push({
-            point: point,
-            distance: distance
-        });
+    var distances=[];
+    for (let point of dataSet) {
+        let distance = data.feature_distance(point);
+        results.push(point);
+        distances.push(distance);
     }
 
     results.sort((a, b) => a.distance - b.distance);
 
-    var map = {};
+    //var map = {};
     var x = 0;
     var y = 0;
-    for (var i = 0; i < k && i < results.length; i++) {
-        var item = results[i];
-        map[item.point.category] = (map[item.point.category] || 0) + 1
-        x += item.point.category[0];
-        y += item.point.category[1];
+    for (let point of results.slice(0,k)) {
+        //map[point.category] = (map[point.category] || 0) + 1;
+        x += point.category[0];
+        y += point.category[1];
     }
 
     x /= k;
     y /= k;
-    return [x, y];
-    // var maxItem = ['none', 0];
-    // for (var key in map) {
-    //     var count = map[key];
-    //     if (count > maxItem[1]) {
-    //         maxItem[0] = key;
-    //         maxItem[1] = count;
-    //     }
-    // }
-    // return maxItem[0];
-
-
+    return {
+        coordinate: [x, y],
+        results: results.slice(0,k),
+        distances: distances
+    };
 }
 
 module.exports.kNN = kNN;

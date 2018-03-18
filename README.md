@@ -18,6 +18,14 @@
 
 `sudo killall -15 mongod`
 
+4.重启数据库
+
+`sudo service mongod restart`
+
+5.开启adminMongo
+
+在adminMongo路径下`npm start`
+
 ## 服务端相关
 
  1. forever 是一个持久化运行的工具
@@ -35,4 +43,3 @@ forever restart -a -l forever.log -o out.log -e err.log app.js
 使用 forever 会将日志输出到文件中，调试时建议直接使用
 
 `node app.js`
-

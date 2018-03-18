@@ -7,18 +7,19 @@
  * This is a function for select candidate point.
  */
 
-var DataPoint = require('../model//kNN').DataPoint;
-
-function candidate(data,dataSet,radius){
+function candidateSet(data,dataSet,radius){
     var results = [];
     for (var point of dataSet) {
         var distance = data.physical_distance(point);
         if (distance<=radius){
             results.push({
-                point: point,
+                id: point.id,
                 distance: distance
             });
         }
     }
     return results;
 }
+
+
+module.exports = candidateSet;
