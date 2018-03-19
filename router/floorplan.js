@@ -1,5 +1,5 @@
 var fs = require("fs");
-
+const log4js= require('log4js');
 
 const floorplan = function(req, res) {
     //var filename = req.body.filename;
@@ -15,6 +15,12 @@ const floorplan = function(req, res) {
         }
 
         res.send(data.toString())
+        log4js.configure({
+            appenders:{floorplan :{type :'file',filename:'./log/123.log'}},
+            categories:{default:{appenders:['floorplan'],level:'trace'}}
+        });
+        const logger= log4js.getLogger('floorplan');
+        logger.trace('-rq '+JSON.stringify(req.body));
     });
  }
 

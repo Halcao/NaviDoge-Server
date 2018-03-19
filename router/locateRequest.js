@@ -13,7 +13,8 @@
 var PFS = require('../model/schema/pfs');
 var DataPoint = require('../model/kNN').DataPoint;
 var kNN = require('../model/kNN').kNN;
-var candidateSet = require('../model/candidateSet.js')
+var candidateSet = require('../model/candidateSet.js');
+const log4js = require('log4js');
 
 
 function locateRequest(req, res) {
@@ -36,11 +37,11 @@ function locateRequest(req, res) {
         }
         var res_rssi = kNN(point, dataSet, 3);
         var { coordinate, results } = res_rssi;
-        
+
         point = new DataPoint(null, null, coordinate);
         var candidates = candidateSet(point, dataSet, radius);
         data = locationData.find(e => e.dType == 'mag');
-        var ids=candidates.map(v => {return v.id});
+        var ids = candidates.map(v => { return v.id });
         PFS.findOne({ pType: data.dType }, function (err, result) {
             if (err) {
                 res.send(JSON.stringify(err));
@@ -55,8 +56,30 @@ function locateRequest(req, res) {
             var res_mag = kNN(point, dataSet, 3);
             var { coordinate, results } = res_mag;
             res.send(JSON.stringify(coordinate));
+
+            log4js.configure({
+                appenders: {
+                    locate: { type: 'file', filename: './log/123.log' }
+                },
+                categories: { default: { appenders: ['locate'], level: 'trace' } }
+            });
+            const logger = log4js.getLogger('locate');
+            logger.trace('-rq ' + JSON.stringify(req.body) + ' -rp ' + coordinate);
+
+
+            log4js.configure({
+                appenders: {
+                    trace: { type: 'file', filename: './log/123.trace' }
+                },
+                categories: { default: { appenders: ['trace'], level: 'trace' } }
+            });
+            const tracer = log4js.getLogger('trace');
+            var userId = '123';
+            var bId=1;
+            var aNo=2;
+            tracer.trace('-id ' + userId +' -t '+req.body.timestamp+ ' -bId ' + bId + ' -aNo ' + aNo + ' -Ux ' + coordinate[0] + ' -Uy ' + coordinate[1]);
         });
-        
+
     });
 
 
