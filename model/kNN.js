@@ -25,6 +25,7 @@ class DataPoint {
         this.id = id;
         this.values = values;
         this.category = category;
+        this.distance=0;
     }
 
     feature_distance(other) {
@@ -49,11 +50,9 @@ class DataPoint {
 function kNN(data, dataSet, k) {
 
     var results = [];
-    var distances=[];
     for (let point of dataSet) {
-        let distance = data.feature_distance(point);
+        point.distance = data.feature_distance(point);
         results.push(point);
-        distances.push(distance);
     }
 
     results.sort((a, b) => a.distance - b.distance);
@@ -71,8 +70,7 @@ function kNN(data, dataSet, k) {
     y /= k;
     return {
         coordinate: [x, y],
-        results: results.slice(0,k),
-        distances: distances
+        results: results.slice(0,k)
     };
 }
 
