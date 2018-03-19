@@ -15,7 +15,7 @@ app.use(session({
 app.use(bodyParser.json());
 
 app.get('/area', require('./router/area.js'));
-app.get('/time', function(req, res) {
+app.get('/time', function (req, res) {
   res.send(Date().toLocaleString());
   res.end()
 });

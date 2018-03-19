@@ -1,4 +1,6 @@
 var Building = require('../model/schema/building.js');
+var Area = require('../model/schema/area.js');
+var PFS = require('../model/schema/pfs');
 var example = `
 {
     "building": {
@@ -126,12 +128,18 @@ var example = `
 `;
 const initial = function (req, res) {
     // TODO: get building
-    res.send(example);
-    return;
+    //res.send(example);
+    //return;
     var bssids = req.body.bssids;
     var geographicLocation = req.body.geographicLocation;
     var timestamp = req.body.timestamp;
-    Building.find({pType: 'rssi' }, function (err, result) {
+    areaLocate(bssids, res);
+    // result = getDefaultResponse();
+    // res.send(result);
+}
+
+function areaLocate(bssids, res) {
+    PFS.find({ pType: 'rssi' }, function (err, result) {
         if (err) {
             var result = {
                 error_code: 1,
@@ -139,38 +147,91 @@ const initial = function (req, res) {
             }
             res.send(JSON.stringify(result));
         }
-        var result = {
-            building: {
-                address: "",
-                geographicLocation: [
 
-                ],
-                name: "",
-                id: ""
-            },
-            area: {
-                name: "",
-                relativeCoordinate: [
+        console.log(result.length);
+        var similarity = 0;
+        var pfs;
+        var bId = 1, aNo = 2;
+        for (pfs of result) {
+            let sim = getSimilarity(bssids, pfs.pBssids);
+            if (sim > similarity) {
+                similarity = sim;
+                // bId=pfs.bId;
+                // aNo=pfs.aNo;
+            }
+        }
+        getResponse(bId, aNo, pfs, res);
+    });
+}
 
-                ],
-                size: [
+function getSimilarity(b1, b2) {
+    var s = 0;
+    for (let b of b1) {
+        if (b2.indexOf(b) != -1) {
+            s = s + 1;
+        }
+    }
+    return s / b1.length;
+}
 
-                ],
-                floor: 5,
-                altitude: 25,
-                no: 2        
-            },
-            locateEngineConf: {
-                Method: "RADAR",
-                K: 3
-            },
-            floorplan: "55_5.svg",
-            timestamp: 176435086,
-            bssids: [
-                "00:1d:0f:92:b6:e4",
-            ]        
-        };
-        res.send(result);
+function getDefaultResponse() {
+
+    var result = {
+        building: {
+            address: "",
+            geographicLocation: [
+
+            ],
+            name: "",
+            id: ""
+        },
+        area: {
+            name: "",
+            relativeCoordinate: [
+
+            ],
+            size: [
+
+            ],
+            floor: 5,
+            altitude: 25,
+            no: 2
+        },
+        locateEngineConf: {
+            Method: "RADAR",
+            K: 3
+        },
+        floorplan: "55_5.svg",
+        timestamp: 176435086,
+        bssids: [
+            "00:1d:0f:92:b6:e4",
+        ]
+    };
+    return result;
+}
+
+function getResponse(bId, aNo, pfs, res) {
+    Building.findOne({ id: bId }, function (err, result) {
+        var response = {};
+        response.building = {
+            address: result.address,
+            geographicLocation: result.geographicLocation,
+            name: result.name,
+            id: bId
+        }
+        area= result.Areas.find(function (x) {return x.no==aNo});
+        response.area = {
+            name: area.name,
+            relativeCoordinate: area.relativeCoordinate,
+            size: area.size,
+            floor: area.floor,
+            altitude: area.altitude,
+            no: aNo
+        }
+        response.locateEngineConf = result.locateEngineConf;
+        response.floorplan = result.floorplan;
+        response.bssids = pfs.bssids;
+        res.send(response);
     });
 }
 
