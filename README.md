@@ -43,3 +43,16 @@ forever restart -a -l forever.log -o out.log -e err.log app.js
 使用 forever 会将日志输出到文件中，调试时建议直接使用
 
 `node app.js`
+
+## 数据相关
+
+来自 Matlab 的数据想要转换到数据库中，需要先转换成 JSON 。这里有一个 Matlab 的 Toolbox：
+
+[JSONlab: a toolbox to encode/decode JSON files](http://cn.mathworks.com/matlabcentral/fileexchange/33381-jsonlab--a-toolbox-to-encode-decode-json-files?requestedDomain=true)
+
+Usage：
+
+```matlab
+savejson(obj)
+# obj 为欲转换的对象
+```
