@@ -3,6 +3,8 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use(session({
   secret: 'sqwoq%@&^%#&@^&80hskdsjlda.s2i3213^&68276nmxc86%^#(', // 建议使用 128 个字符的随机字符串
@@ -26,4 +28,11 @@ app.get('/bssids', require('./router/bssids.js'));
 app.post('/locate', require('./router/locateRequest.js'));
 app.post('/floorplan', require('./router/floorplan.js'));
 
-app.listen(8080);
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+global.io = io;
+//app.listen(8080);
+http.listen(8080, function(){
+  console.log('listening on *:8080');
+});

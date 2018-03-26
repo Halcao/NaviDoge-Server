@@ -57,6 +57,8 @@ function locateRequest(req, res) {
             var { coordinate, results } = res_mag;
             res.send(JSON.stringify(coordinate));
 
+            global.io.emit('locate result', { "coordinate": coordinate, "session": req.session });
+
             log4js.configure({
                 appenders: {
                     locate: { type: 'file', filename: './log/123.log' }
