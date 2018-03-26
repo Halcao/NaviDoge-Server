@@ -184,7 +184,8 @@ function getResponse(req, res, bId, aNo, pfs) {
             size: area.size,
             floor: area.floor,
             altitude: area.altitude,
-            no: aNo
+            no: aNo,
+            bssids: area.PFS
         }
         response.locateEngineConf = result.locateEngineConf;
         response.floorplan = result.floorplan;
