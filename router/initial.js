@@ -185,11 +185,10 @@ function getResponse(req, res, bId, aNo, pfs) {
             floor: area.floor,
             altitude: area.altitude,
             no: aNo,
-            bssids: area.PFS
         }
         response.locateEngineConf = result.locateEngineConf;
-        response.floorplan = result.floorplan;
-        response.bssids = pfs.bssids;
+        response.floorplan = area.floorplanFilename;
+        response.bssids = pfs.pBssids;
         res.send(response);
         log4js.configure({
             appenders:{initial :{type :'file',filename:'./log/123.log'}},
