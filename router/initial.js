@@ -1,6 +1,6 @@
 var Building = require('../model/schema/building.js');
-var PFS = require('../model/schema/pfs');
-const log4js= require('log4js');
+var LDB = require('../model/schema/ldb.js');
+const log4js = require('log4js');
 var example = `
 {
     "building": {
@@ -127,35 +127,78 @@ var example = `
 }
 `;
 const initial = function (req, res) {
-    // TODO: get building
-    //res.send(example);
-    //return;
-    var bssids = req.body.bssids;
-    var geographicLocation = req.body.geographicLocation;
-    var timestamp = req.body.timestamp;
-    PFS.find({ pType: 'rssi' }, function (err, result) {
-        if (err) {
-            var result = {
-                error_code: 1,
-                error_message: err
-            }
-            res.send(JSON.stringify(result));
-        }
+    // res.send(example);
+    // return;
+    // TODO get userid
+    var ggl = req.body.geographicLocation;
+    locateBuilding(req, res, ggl);
+}
 
-        console.log(result.length);
-        var similarity = 0;
-        var pfs;
-        var bId = 1, aNo = 2;
-        for (pfs of result) {
-            let sim = getSimilarity(bssids, pfs.pBssids);
-            if (sim > similarity) {
-                similarity = sim;
-                // bId=pfs.bId;
-                // aNo=pfs.aNo;
+function locateBuilding(req, res, ggl) {
+    Building.find({},function (err, result) {
+        var b = -1;
+        var dis = 0, min_dis = Infinity;
+        for (let i = 0; i < result.length; i++) {
+            let rggl = result[i].geographicLocation;
+            dis = (ggl[0] - rggl[0]) * (ggl[0] - rggl[0]) + (ggl[1] - rggl[1]) * (ggl[1] - rggl[1]);
+            if (dis < min_dis) {
+                min_dis = dis;
+                b = i;
             }
         }
-        getResponse(req, res, bId, aNo, pfs);
+        if (b != -1) {
+            var response = {};
+            response.building = {
+                id: result[b].id,
+                name: result[b].name,
+                address: result[b].address,
+                geographicLocation: result[b].geographicLocation
+            };
+            locateArea(req, res, response, result[b]);
+        }
+        else {
+            res.send('{"error":"10001","message":"Building not found."}');
+            // TODO log error
+        }
     });
+}
+
+function locateArea(req, res, response, building) {
+    var areas = building.Areas;
+    var a = -1;
+    var bssids = req.body.bssids;
+    for (let i = 0; i < areas.length; i++) {
+        let sim = getSimilarity(bssids, areas[i].stations.addresses);
+        if (sim > similarity) {
+            similarity = sim;
+            a = i;
+        }
+    }
+    if (a!=-1){
+        let area=araes[a];
+        response.area = {
+            name: area.name,
+            relativeCoordinate: area.relativeCoordinate,
+            size: area.size,
+            floor: area.floor,
+            altitude: area.altitude,
+            no: area.no,
+        }
+        response.locateEngineConf = area.locateEngineConf;
+        response.floorplan = area.floorplanFilename;
+        response.bssids = area.stations.addresses;
+        res.send(response);
+        log4js.configure({
+            appenders: { initial: { type: 'file', filename: './log/123.log' } },
+            categories: { default: { appenders: ['initial'], level: 'trace' } }
+        });
+        const logger = log4js.getLogger('inital');
+        logger.trace('-rq ' + JSON.stringify(req.body) + ' -rp ' + JSON.stringify(response));
+    }
+    else{
+        res.send('{"error":"10002","message":"Area not found."}');
+        // TODO log error
+    }
 }
 
 function getSimilarity(b1, b2) {
@@ -166,37 +209,6 @@ function getSimilarity(b1, b2) {
         }
     }
     return s / b1.length;
-}
-
-function getResponse(req, res, bId, aNo, pfs) {
-    Building.findOne({ id: bId }, function (err, result) {
-        var response = {};
-        response.building = {
-            address: result.address,
-            geographicLocation: result.geographicLocation,
-            name: result.name,
-            id: bId
-        }
-        area = result.Areas.find(function (x) { return x.no == aNo });
-        response.area = {
-            name: area.name,
-            relativeCoordinate: area.relativeCoordinate,
-            size: area.size,
-            floor: area.floor,
-            altitude: area.altitude,
-            no: aNo,
-        }
-        response.locateEngineConf = result.locateEngineConf;
-        response.floorplan = area.floorplanFilename;
-        response.bssids = pfs.pBssids;
-        res.send(response);
-        log4js.configure({
-            appenders:{initial :{type :'file',filename:'./log/123.log'}},
-            categories:{default:{appenders:['initial'],level:'trace'}}
-        });
-        const logger= log4js.getLogger('inital');
-        logger.trace('-rq '+JSON.stringify(req.body)+' -rp '+JSON.stringify(response));
-    });
 }
 
 module.exports = initial;

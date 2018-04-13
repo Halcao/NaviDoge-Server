@@ -2,10 +2,7 @@ var fs = require("fs");
 const log4js= require('log4js');
 
 const floorplan = function(req, res) {
-    // res.header('Access-Control-Allow-Origin','*');
-    //var filename = req.body.filename;
-    var filename = "55_5.svg";
-    //var basePath = "/home/noil/NaviDoge-Server-master/resources/";
+    var filename = req.body.filename;
     var path=require("path");
     var basePath=path.resolve(__dirname,"..")+"/resources/";
     // 异步读取

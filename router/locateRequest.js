@@ -10,7 +10,7 @@
 //     private double[] dData;
 // }
 
-var PFS = require('../model/schema/pfs');
+var PFS = require('../model/schema/ldb.js');
 var DataPoint = require('../model/kNN').DataPoint;
 var kNN = require('../model/kNN').kNN;
 var candidateSet = require('../model/candidateSet.js');

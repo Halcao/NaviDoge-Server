@@ -11,10 +11,6 @@ const buildingSchema = new Schema({
     name: String,
     address: String,
     geographicLocation: [Number],
-    locateEngineConf: {
-        Method: String,
-        K: Number
-    },
     Areas: [{
         no: Number,
         name: String,
@@ -23,8 +19,17 @@ const buildingSchema = new Schema({
         relativeCoordinate: [Number],
         size: [Number],
         floorplanFilename: String,
-        PFSList: [Number],
-        StationList: Number
+        locationDatabases: [Number],
+        locateEngineConf: {
+            Method: String,
+            K: Number
+        },
+        stations: {
+            d_id: Number,
+            type: String,
+            addresses: [String],
+            parameters: [Number]
+        }
     }]
 });
 
