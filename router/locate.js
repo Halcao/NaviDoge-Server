@@ -9,7 +9,7 @@ const locate = function (req, res) {
     const locationData = req.body.locationData;
     var data = locationData.find(e => e.dType == 'rssi');
     var b_id = 1;
-    var a_no = 2;
+    var a_no = 1;
     LDB.findOne({ b_id: b_id, a_no: a_no, type: data.dType }, function (err, result) {
         if (err) {
             res.send(JSON.stringify(err));

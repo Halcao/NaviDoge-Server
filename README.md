@@ -4,6 +4,7 @@
 
 1.后台开启 mongodb 数据库 
 
+`sudo service mongod start`
 `mongod -f /etc/mongod.conf --fork --logpath=/var/log/mongodb/log.log &`
 
 其中 `/etc/mongod.conf`中指定了数据库路径 /var/lib/mongodb 和 bindIP = 127.0.0.1 即只可以由本机访问，建议部署时采用这个方法打开数据库。
@@ -16,7 +17,8 @@
 
 3.关闭数据库
 
-`sudo killall -15 mongod`
+`sudo killall -15 mongod //避免使用该指令`
+`sudo service mongod stop`
 
 4.重启数据库
 
@@ -25,6 +27,24 @@
 5.开启adminMongo
 
 在adminMongo路径下`npm start`
+
+6.mongodb 数据导入导出
+
+数据导入
+
+`mongoimport -h localhost:27017 -d navidoge -c LDB LDB.json --jsonArray`
+
+数据导出
+
+`mongoexport -h localhost:27017 -d navidoge -c LDB -o LDB.json`
+
+7.mongodb 操作
+```
+use navidoge;
+db.LDB.remove({}); // 删除数据
+db.LDB.drop(); //删除Collection
+db.createCollection("LDB",{capped:true,autoIndexId:true,size:6142800,max:10000});
+```
 
 ## 服务端相关
 
