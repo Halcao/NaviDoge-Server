@@ -8,7 +8,9 @@ const locate = function (req, res) {
     const radius = 5;
     const locationData = req.body.locationData;
     var data = locationData.find(e => e.dType == 'rssi');
-    LDB.findOne({ type: data.dType }, function (err, result) {
+    var b_id = 1;
+    var a_no = 2;
+    LDB.findOne({ b_id: b_id, a_no: a_no, type: data.dType }, function (err, result) {
         if (err) {
             res.send(JSON.stringify(err));
         }
@@ -61,9 +63,9 @@ const locate = function (req, res) {
             });
             const tracer = log4js.getLogger('trace');
             var userId = '123';
-            var bId=1;
-            var aNo=2;
-            tracer.trace('-id ' + userId +' -t '+req.body.timestamp+ ' -bId ' + bId + ' -aNo ' + aNo + ' -Ux ' + coordinate[0] + ' -Uy ' + coordinate[1]);
+            var bId = 1;
+            var aNo = 2;
+            tracer.trace('-id ' + userId + ' -t ' + req.body.timestamp + ' -bId ' + bId + ' -aNo ' + aNo + ' -Ux ' + coordinate[0] + ' -Uy ' + coordinate[1]);
         });
 
     });
