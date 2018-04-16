@@ -188,7 +188,7 @@ function locateArea(req, res, response, building) {
         }
         response.locateEngineConf = area.locateEngineConf;
         response.floorplan = area.floorplanFilename;
-        response.bssids = area.stations.addresses;
+        response.bssids = area.stations;
         res.send(response);
         log4js.configure({
             appenders: { initial: { type: 'file', filename: './log/123.log' } },
