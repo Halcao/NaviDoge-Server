@@ -135,7 +135,7 @@ const initial = function (req, res) {
 }
 
 function locateBuilding(req, res, ggl) {
-    Building.find({},function (err, result) {
+    Building.find({}, function (err, result) {
         var b = -1;
         var dis = 0, min_dis = Infinity;
         for (let i = 0; i < result.length; i++) {
@@ -167,15 +167,17 @@ function locateArea(req, res, response, building) {
     var areas = building.Areas;
     var a = -1;
     var bssids = req.body.bssids;
+    var similarity = 0;
     for (let i = 0; i < areas.length; i++) {
-        let sim = getSimilarity(bssids, areas[i].stations.addresses);
+        var stations = areas[i].stations;
+        let sim = getSimilarity(bssids, stations);
         if (sim > similarity) {
             similarity = sim;
             a = i;
         }
     }
-    if (a!=-1){
-        let area=araes[a];
+    if (a != -1) {
+        let area = areas[a];
         response.area = {
             name: area.name,
             relativeCoordinate: area.relativeCoordinate,
@@ -195,7 +197,7 @@ function locateArea(req, res, response, building) {
         const logger = log4js.getLogger('inital');
         logger.trace('-rq ' + JSON.stringify(req.body) + ' -rp ' + JSON.stringify(response));
     }
-    else{
+    else {
         res.send('{"error":"10002","message":"Area not found."}');
         // TODO log error
     }

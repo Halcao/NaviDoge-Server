@@ -24,12 +24,13 @@ const buildingSchema = new Schema({
             Method: String,
             K: Number
         },
-        stations: {
-            d_id: Number,
-            type: String,
-            addresses: [String],
-            parameters: [Number]
-        }
+        // stations: {
+        //     d_id: Number,
+        //     type: String,
+        //     addresses: [String],
+        //     parameters: [Number]
+        // }
+        stations: [String]
     }]
 });
 
