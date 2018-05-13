@@ -41,7 +41,7 @@ const locate = function (req, res) {
             }
             var res_mag = kNN(point, dataSet, 3);
             var { coordinate, results } = res_mag;
-            res.send(JSON.stringify(coordinate));
+            res.send(JSON.stringify(coordinate)); 
 
             global.io.emit('locate result', { "coordinate": coordinate, "session": req.session });
 
