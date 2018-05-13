@@ -177,7 +177,7 @@ function locateArea(req, res, response, building) {
         }
     }
     //!!!!!!!!!!!!!!!!Temp 
-    a=4;
+    a=3;
     if (a != -1) {
         let area = areas[a];
         response.area = {
