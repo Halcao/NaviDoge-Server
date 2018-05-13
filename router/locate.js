@@ -5,11 +5,20 @@ var candidateSet = require('../model/candidateSet.js');
 const log4js = require('log4js');
 
 const locate = function (req, res) {
+    log4js.configure({
+        appenders: {
+            locate: { type: 'file', filename: './log/123.log' }
+        },
+        categories: { default: { appenders: ['locate'], level: 'trace' } }
+    });
+    const logger = log4js.getLogger('locate');
+    logger.trace('-rq ' + JSON.stringify(req.body));
+
     const radius = 5;
     const locationData = req.body.locationData;
     var data = locationData.find(e => e.dType == 'rssi');
     var b_id = 1;
-    var a_no = 1;
+    var a_no = 4;
     LDB.findOne({ b_id: b_id, a_no: a_no, type: data.dType }, function (err, result) {
         if (err) {
             res.send(JSON.stringify(err));
@@ -28,7 +37,7 @@ const locate = function (req, res) {
         var candidates = candidateSet(point, dataSet, radius);
         data = locationData.find(e => e.dType == 'mag');
         var ids = candidates.map(v => { return v.id });
-        LDB.findOne({ type: data.dType }, function (err, result) {
+        LDB.findOne({ b_id: b_id, a_no: a_no,type: data.dType }, function (err, result) {
             if (err) {
                 res.send(JSON.stringify(err));
             }
@@ -45,14 +54,7 @@ const locate = function (req, res) {
 
             global.io.emit('locate result', { "coordinate": coordinate, "session": req.session });
 
-            log4js.configure({
-                appenders: {
-                    locate: { type: 'file', filename: './log/123.log' }
-                },
-                categories: { default: { appenders: ['locate'], level: 'trace' } }
-            });
-            const logger = log4js.getLogger('locate');
-            logger.trace('-rq ' + JSON.stringify(req.body) + ' -rp ' + coordinate);
+            
 
 
             log4js.configure({
@@ -63,8 +65,8 @@ const locate = function (req, res) {
             });
             const tracer = log4js.getLogger('trace');
             var userId = '123';
-            var bId = 1;
-            var aNo = 2;
+            var bId = b_id;
+            var aNo = a_no;
             tracer.trace('-id ' + userId + ' -t ' + req.body.timestamp + ' -bId ' + bId + ' -aNo ' + aNo + ' -Ux ' + coordinate[0] + ' -Uy ' + coordinate[1]);
         });
 
