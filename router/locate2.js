@@ -31,7 +31,6 @@ const locate = function (req, res) {
             dataSet.push(new DataPoint(i, values[i], coordinates[i]));
         }
         var res_mag = kNN(point, dataSet, 10);
-        var { coordinate, results } = res_mag;
 
         data = locationData.find(e => e.dType == 'mag');
 
@@ -41,6 +40,7 @@ const locate = function (req, res) {
             }
             
             point = new DataPoint(null, data.dData.map(e => e === 0 ? -100 : e), []);
+            var { coordinate, results } = res_mag;
             dataSet = results;
             var res_rssi = kNN(point, dataSet, 3);
             var { coordinate, results } = res_rssi;

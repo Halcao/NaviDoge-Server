@@ -30,7 +30,7 @@ app.get('/time', function (req, res) {
 });
 
 app.post('/initial', require('./router/initial.js'));
-app.post('/locate', require('./router/locate_wifi.js'));
+app.post('/locate', require('./router/locate2.js'));
 app.post('/floorplan', require('./router/floorplan.js'));
 
 io.on('connection', function(socket){

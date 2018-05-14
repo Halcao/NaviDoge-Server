@@ -141,11 +141,16 @@ function locateBuilding(req, res, ggl) {
         for (let i = 0; i < result.length; i++) {
             let rggl = result[i].geographicLocation;
             dis = (ggl[0] - rggl[0]) * (ggl[0] - rggl[0]) + (ggl[1] - rggl[1]) * (ggl[1] - rggl[1]);
-            if (dis < min_dis) {
-                min_dis = dis;
+            // if (dis < min_dis) {
+            //     min_dis = dis;
+            //     b = i;
+            // }
+            // temp
+            if (result[i].id==1) {
                 b = i;
             }
         }
+        
         if (b != -1) {
             var response = {};
             response.building = {

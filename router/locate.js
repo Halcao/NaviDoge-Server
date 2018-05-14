@@ -14,7 +14,7 @@ const locate = function (req, res) {
     const logger = log4js.getLogger('locate');
     logger.trace('-rq ' + JSON.stringify(req.body));
 
-    const radius = 1;
+    const radius = 2;
     const locationData = req.body.locationData;
     var data = locationData.find(e => e.dType == 'rssi');
     var b_id = 1;
