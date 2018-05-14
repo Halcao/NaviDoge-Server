@@ -33,23 +33,6 @@ const locate = function (req, res) {
         var res_rssi = kNN(point, dataSet, 3);
         var { coordinate, results } = res_rssi;
 
-        point = new DataPoint(null, null, coordinate);
-        var candidates = candidateSet(point, dataSet, radius);
-        data = locationData.find(e => e.dType == 'mag');
-        var ids = candidates.map(v => { return v.id });
-        LDB.findOne({ b_id: b_id, a_no: a_no,type: data.dType }, function (err, result) {
-            if (err) {
-                res.send(JSON.stringify(err));
-            }
-            point = new DataPoint(null, data.dData, []);
-            values = result.data;
-            coordinates = result.relativeCoordinates;
-            dataSet = [];
-            for (let i = 0; i < ids.length; i++) {
-                dataSet.push(new DataPoint(ids[i], values[ids[i]], coordinates[ids[i]]));
-            }
-            var res_mag = kNN(point, dataSet, 3);
-            var { coordinate, results } = res_mag;
             res.send(JSON.stringify(coordinate));
 
             global.io.emit('locate result', { "coordinate": coordinate, "session": req.session });
@@ -68,7 +51,6 @@ const locate = function (req, res) {
             var bId = b_id;
             var aNo = a_no;
             tracer.trace('-id ' + userId + ' -t ' + req.body.timestamp + ' -bId ' + bId + ' -aNo ' + aNo + ' -Ux ' + coordinate[0] + ' -Uy ' + coordinate[1]);
-        });
 
     });
 }
