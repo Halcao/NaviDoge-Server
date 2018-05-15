@@ -30,7 +30,7 @@ const locate = function (req, res) {
         for (let i = 0; i < values.length; i++) {
             dataSet.push(new DataPoint(i, values[i], coordinates[i]));
         }
-        var res_rssi = kNN(point, dataSet, 3);
+        var res_rssi = kNN(point, dataSet, 1);
         var { coordinate, results } = res_rssi;
 
             res.send(JSON.stringify(coordinate));
